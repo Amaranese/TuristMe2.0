@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Peticion Jquery</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<style>
+		h1 {
+		font-family: 'Calibri';
+		margin-left: 10px;
+	}
+
+	td {
+		font-family: 'Helvetica';
+	}
+
+	#contenedor {
+		border: 2px solid black;
+		background: #98C4F0;
+        width: 20%;
+        height: 30%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+	}
+
+	td {
+		padding-top: 20px;
+        text-align: left;
+    }
+
+    button {
+    	margin-left: 150px;
+    	margin-top: 20px;
+    }
+	</style>
+</head>
+<body>
+
+	<div id="contenedor">
+	<h1>Editar usuario </h1>
+
+	<table>
+		<tr>
+			<td>Nombre</td>
+			<td><input id="name" type="text" name="name" required></td>
+			
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td><input id="email" type="email" name="Email" required></td>
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td><input id="password" type="password" name="Password" required></td>
+		</tr>
+
+	</table>
+	<button onclick="editUser();">Editar usuario</button>
+	</div>
+
+</body>
+
+<script>
+	
+		function editUser() {
+			var name = document.getElementById('name').value;
+			var email = document.getElementById('email').value;
+			var password = document.getElementById('password').value;
+
+			$.ajax({
+
+				url: 'http://localhost:80/TuristMe-web-client/public/index.php/api/user/'+sessionStorage.getItem('id'),
+
+				beforeSend: function(request) {
+			 		request.setRequestHeader("Authorization", sessionStorage.getItem("token"));
+			 	},
+
+			 	data: {
+			 		name: name,	
+			 		email: email,
+					password: password
+				},
+
+			 	type: 'PUT',
+			 	
+			 	dataType : 'json',
+
+				success : function(data) {
+			 		alert(data.MESSAGE);
+			 		window.location.href="http://localhost/TuristMe-web-client/webclient/main.html";
+			 	},
+
+			 	error : function (xhr, status) {
+			 		alert(xhr.responseJSON['MESSAGE']);
+			 	},
+
+			 	complete : function(xhr, status) {
+					console.log('Petition complete');
+			 	}
+			 });
+		}
+	</script>
+</html>
